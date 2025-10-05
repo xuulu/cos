@@ -1,0 +1,14 @@
+[project]
+name = "cos"
+version = "0.1.0"
+description = "cos"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "imagehash>=4.3.2",
+    "pillow>=11.3.0",
+]
+
+[[tool.uv.index]]
+name = "tuna"
+url = "https://mirrors.aliyun.com/pypi/simple/"
