@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "imagehash>=4.3.2",
     "pillow>=11.3.0",
+    "requests>=2.32.5",
 ]
 
 [[tool.uv.index]]

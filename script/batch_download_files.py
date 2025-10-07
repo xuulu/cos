@@ -2,8 +2,8 @@ import requests
 from pathlib import Path
 import concurrent.futures
 from urllib.parse import urlparse
-import os
 
+# 批量下载文件(读取指定文件，一行一个url，并发下载到指定目录)
 def batch_download_files(url_file_path, download_dir="./downloads", max_workers=5):
     """
     批量下载文件链接列表中的文件
@@ -80,9 +80,3 @@ def batch_download_files(url_file_path, download_dir="./downloads", max_workers=
     print(f"失败: {results['failed']}")
 
     return results
-
-# 使用示例
-if __name__ == "__main__":
-    # 示例用法
-    # batch_download_files("urls.txt", "./downloads", max_workers=3)
-    pass
