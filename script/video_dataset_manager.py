@@ -2,6 +2,7 @@ import csv
 import uuid
 import shutil
 import hashlib
+import mimetypes
 import asyncio
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
@@ -99,6 +100,20 @@ class VideoDatasetManager:
         files = [f for f in files if f.is_file()]
         print(f"📹 发现 {len(files)} 个视频文件")
 
+        # 过滤非视频文件
+        video_files = []
+        for f in files:
+            mime_type = mimetypes.guess_type(f)[0]
+            if mime_type and mime_type.startswith('video'):
+                video_files.append(f)
+            else:
+                print(f"⏭️ 跳过非视频文件: {f.name}")
+
+        files = video_files
+        if not files:
+            print("⚠️ 没有找到任何视频文件")
+            return
+
         # 使用顶层函数进行多进程哈希计算
         loop = asyncio.get_running_loop()
         tasks = [
@@ -109,9 +124,15 @@ class VideoDatasetManager:
         ]
         hashes = await asyncio.gather(*tasks)
 
+        # 统计数据
+        processed_count = 0
+        skipped_count = 0
+        duplicated_count = 0
+
         for file, h in zip(files, hashes):
             if h in all_hashes:
                 print(f"⚠️ 跳过重复: {file.name}")
+                duplicated_count += 1
                 continue
 
             target_dir = self._get_next_dir()
@@ -138,9 +159,14 @@ class VideoDatasetManager:
                 })
 
             all_hashes.add(h)
+            processed_count += 1
             print(f"✅ 已添加 #{next_id} → {target_dir.name}/{new_name}")
 
         print("🎉 视频处理完成！")
+        print(f"📊 处理报告:")
+        print(f"   - 成功处理: {processed_count} 个文件")
+        print(f"   - 重复跳过: {duplicated_count} 个文件")
+        print(f"   - 非视频跳过: {skipped_count} 个文件")
 
     def close(self):
         self.executor.shutdown()

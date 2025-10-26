@@ -42,7 +42,7 @@ async def main_for_video_dataset_manager():
     )
 
     # 添加视频（可传入单个视频或目录
-    await manager.add_videos(r"C:\Users\a\Downloads")
+    await manager.add_videos(r"./aa")
 
     # 释放资源
     manager.close()
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # asyncio.run(main_for_image_dataset_manager())
 
     # 视频数据集管理
-    # asyncio.run(main_for_video_dataset_manager())
+    asyncio.run(main_for_video_dataset_manager())
 
     pass
 
